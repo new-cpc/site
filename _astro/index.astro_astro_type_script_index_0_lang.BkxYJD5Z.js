@@ -1,8 +1,0 @@
-import{t as e}from"./site-config.BegNMtY8.js";var t=document.getElementById(`board`),n={current:`🟡`,waiting:`⚪`,approved:`✅`,rejected:`⛔`,notified:`📨`,skipped:`⏭️`};function r(e,t){let n=(t?new Date(t).getTime():Date.now())-new Date(e).getTime(),r=Math.floor(n/6e4);return r<60?`${r} 分`:`${Math.floor(r/60)} 時 ${r%60} 分`}async function i(){try{let{cases:i}=await(await fetch(`${e.workerBase}/approval/board`)).json();if(!i?.length){t.innerHTML=`<p class="muted">（還沒有送簽案件——到公關智慧助手把版本送簽）</p>`;return}t.innerHTML=i.map(e=>{let t=e.cpc_case_steps.filter(e=>e.kind===`sign`).sort((e,t)=>e.step_no-t.step_no),i=e.cpc_case_steps.filter(e=>e.kind===`notify`);return`<article class="case ${e.status}">
-            <header>
-              <strong>${e.cpc_versions.title}</strong> <span class="muted">v${e.cpc_versions.version_no}｜${e.cpc_templates.name}</span>
-              <span class="stay">${e.status===`in_progress`?`⏱ 在流程 ${r(e.created_at)}`:e.status===`approved`?`✅ 已決行`:`⛔ 已退回`}</span>
-            </header>
-            <div class="chain">${t.map(e=>`<span class="node ${e.status}" title="${e.comment||``}">${n[e.status]||``} ${e.cpc_positions.title}</span>`).join(`<span class="arrow">→</span>`)}</div>
-            ${i.length?`<div class="notifies muted">知會：${i.map(e=>`📨 ${e.cpc_positions.title}`).join(`、`)}</div>`:``}
-          </article>`}).join(``)}catch{t.innerHTML=`<p class="muted">戰情表載入失敗（後端未設定或網路問題）</p>`}}i(),setInterval(i,1e4);
